@@ -7,11 +7,14 @@
 
 使用方法：
 
-下载autohotkey
-https://www.autohotkey.com/
+下载autohotkey（https://www.autohotkey.com/）
+
 安装，下载ahk脚本，打开。也可以直接使用release打包的exe文件
+
 1.要求分辨率调到1280x720
+
 2.在托盘菜单设置快捷键
+
 3.按小键盘1金乌自动出招；按小键盘2自动刷多维；按小键盘3弥弥尔观测站自动探索；按小键盘4托特自动战斗；按小键盘5娜美自动战斗。
 
 所有脚本中途想停止按小键盘0。
