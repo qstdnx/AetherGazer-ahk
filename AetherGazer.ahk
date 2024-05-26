@@ -1,6 +1,6 @@
-﻿; ----------------------------------------------------------------------------
+; ----------------------------------------------------------------------------
 ; Script Name: 深空之眼
-; Version: 2.1
+; Version: 2.2
 ; Author: qstdnx
 ; Contact: https://github.com/qstdnx/AetherGazer-ahk/issues
 ; ----------------------------------------------------------------------------
@@ -11,26 +11,29 @@ SetBatchLines,-1        ;~脚本全速执行(默认10ms)
 CoordMode,menu,Window   ;~坐标相对活动窗口
 ;------------------------------------------------设置 ↓↓↓
 ; 初始化快捷键
+global AttackKey := "j"
 global Skill1Key := "u"
 global Skill2Key := "i"
 global Skill3Key := "o"
+global DodgeKey := "Space"
 global UltimateKey := "r"
 global Teammate1Key := "1"
 global Teammate2Key := "2"
-global AttackKey := "j"
 global JinwuKey := "Numpad1"
 global DimensionKey := "Numpad2"
 global ExploreKey := "Numpad3"
 global TuoteKey := "Numpad4"
+global NameiKey := "Numpad5"
 global StopscriptKey := "Numpad0"
 global ScriptDir := A_ScriptDir
 IniFilePath := ScriptDir . "\settings.ini"
 
         if FileExist(IniFilePath) {
+        IniRead, AttackKey, %IniFilePath%, Hotkeys, AttackKey
         IniRead, Skill1Key, %IniFilePath%, Hotkeys, Skill1Key 
         IniRead, Skill2Key, %IniFilePath%, Hotkeys, Skill2Key
         IniRead, Skill3Key, %IniFilePath%, Hotkeys, Skill3Key
-        IniRead, AttackKey, %IniFilePath%, Hotkeys, AttackKey
+        IniRead, DodgeKey, %IniFilePath%, Hotkeys, DodgeKey
         IniRead, UltimateKey, %IniFilePath%, Hotkeys, UltimateKey
         IniRead, Teammate1Key, %IniFilePath%, Hotkeys, Teammate1Key
         IniRead, Teammate2Key, %IniFilePath%, Hotkeys, Teammate2Key
@@ -38,6 +41,7 @@ IniFilePath := ScriptDir . "\settings.ini"
         IniRead, DimensionKey, %IniFilePath%, Hotkeys, DimensionKey
         IniRead, ExploreKey, %IniFilePath%, Hotkeys, ExploreKey
         IniRead, TuoteKey, %IniFilePath%, Hotkeys, TuoteKey
+        IniRead, NameiKey, %IniFilePath%, Hotkeys, NameiKey
         IniRead, StopscriptKey, %IniFilePath%, Hotkeys, StopscriptKey
     }
     
@@ -45,20 +49,23 @@ Hotkey, %JinwuKey%, Jinwu
 Hotkey, %DimensionKey%, Dimension
 Hotkey, %ExploreKey%, Explore
 Hotkey, %TuoteKey%, Tuote
+Hotkey, %NameiKey%, Namei
 Hotkey, %StopscriptKey%, Stopscript
 
 
 Menu, Tray, Add, 快捷键设置, ShowSettingsGUI
 ShowSettingsGUI() {
     Gui, New
+    Gui, Add, Text,, 普攻快捷键:
+    Gui, Add, Hotkey, vAttackKey, % AttackKey
     Gui, Add, Text,, 1 技能快捷键:
     Gui, Add, Hotkey, vSkill1Key, % Skill1Key
     Gui, Add, Text,, 2 技能快捷键:
     Gui, Add, Hotkey, vSkill2Key, % Skill2Key
     Gui, Add, Text,, 3 技能快捷键:
     Gui, Add, Hotkey, vSkill3Key, % Skill3Key
-    Gui, Add, Text,, 普攻快捷键:
-    Gui, Add, Hotkey, vAttackKey, % AttackKey
+    Gui, Add, Text,, 闪避快捷键:
+    Gui, Add, Hotkey, vDodgeKey, % DodgeKey
     Gui, Add, Text,, 奥义快捷键:
     Gui, Add, Hotkey, vUltimateKey, % UltimateKey
     Gui, Add, Text,, 队友1 奥义快捷键:
@@ -73,6 +80,8 @@ ShowSettingsGUI() {
     Gui, Add, Hotkey, vExploreKey, % ExploreKey
     Gui, Add, Text,, 托特自动战斗快捷键:
     Gui, Add, Hotkey, vTuoteKey, % TuoteKey
+    Gui, Add, Text,, 娜美自动战斗快捷键:
+    Gui, Add, Hotkey, vNameiKey, % NameiKey
     Gui, Add, Text,, 停止脚本快捷键:
     Gui, Add, Hotkey, vStopscriptKey, % StopscriptKey
     Gui, Add, Button, default, OK
@@ -88,10 +97,11 @@ ShowSettingsGUI() {
     ButtonOK:
     Gui, Submit
     FileDelete, %IniFilePath%
+    IniWrite, %AttackKey%, %IniFilePath%, Hotkeys, AttackKey
     IniWrite, %Skill1Key%, %IniFilePath%, Hotkeys, Skill1Key
     IniWrite, %Skill2Key%, %IniFilePath%, Hotkeys, Skill2Key
     IniWrite, %Skill3Key%, %IniFilePath%, Hotkeys, Skill3Key
-    IniWrite, %AttackKey%, %IniFilePath%, Hotkeys, AttackKey
+    IniWrite, %DodgeKey%, %IniFilePath%, Hotkeys, DodgeKey
     IniWrite, %UltimateKey%, %IniFilePath%, Hotkeys, UltimateKey
     IniWrite, %Teammate1Key%, %IniFilePath%, Hotkeys, Teammate1Key
     IniWrite, %Teammate2Key%, %IniFilePath%, Hotkeys, Teammate2Key
@@ -99,12 +109,14 @@ ShowSettingsGUI() {
     IniWrite, %DimensionKey%, %IniFilePath%, Hotkeys, DimensionKey
     IniWrite, %ExploreKey%, %IniFilePath%, Hotkeys, ExploreKey
     IniWrite, %TuoteKey%, %IniFilePath%, Hotkeys, TuoteKey
+    IniWrite, %NameiKey%, %IniFilePath%, Hotkeys, NameiKey
     IniWrite, %StopscriptKey%, %IniFilePath%, Hotkeys, StopscriptKey
     ; 更新全局变量
+    AttackKey := AttackKey
     Skill1Key := Skill1Key
     Skill2Key := Skill2Key
     Skill3Key := Skill3Key
-    AttackKey := AttackKey
+    DodgeKey := DodgeKey
     UltimateKey := UltimateKey
     Teammate1Key := Teammate1Key
     Teammate2Key := Teammate2Key
@@ -112,12 +124,14 @@ ShowSettingsGUI() {
     DimensionKey := DimensionKey
     ExploreKey := ExploreKey
     TuoteKey := TuoteKey
+    NameiKey := NameiKey
     StopscriptKey := StopscriptKey
     Hotkey, %JinwuKey%, Jinwu
     Hotkey, %DimensionKey%, Dimension
     Hotkey, %ExploreKey%, Explore
     Hotkey, %TuoteKey%, Stopscript
     Hotkey, %TuoteKey%, Tuote
+    Hotkey, %NameiKey%, Namei
     Hotkey, %StopscriptKey%, Stopscript
     
 
@@ -191,8 +205,6 @@ Press1:
         Send, {%AttackKey%}
         sleep 10
         Send, {%Teammate2Key%}
-        sleep 10
-        Send, {%UltimateKey%}
         sleep 10
         Send, {%AttackKey%}
         sleep 10
@@ -523,7 +535,7 @@ Tuote:
     If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
     {
         4_Enable :=!4_Enable
-        if (1_Enable=False)
+        if (4_Enable=False)
         {
             SetTimer, Press4, Off
             ToolTip
@@ -572,10 +584,94 @@ Press4:
         ToolTip
     }
 return
+;------------------------------------------------娜美自动战斗,小键盘5启动 ↓↓↓
+5_Enable= False 
+#If WinActive("ahk_exe AetherGazer.exe") || WinActive("ahk_exe AetherGazer_Bili.exe")
+Namei: 
+{
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        5_Enable :=!5_Enable
+        if (5_Enable=true)
+        {
+            SetTimer, Press5, Off
+            ToolTip
+        }
+        else
+        {
+            sleep 100
+            Send, {%Skill1Key%}{%AttackKey%}
+            SetTimer, Press5, 10  ; 
+            ToolTip, 娜美：启动, 74, 1021
+        }
+    }
+}
 
+Press5:
+    If WinActive("ahk_exe AetherGazer.exe")
+    {
+        loop{
+        If (GetColor(655, 569)=="0xFFFFFF")
+        {
+             send, {%DodgeKey%}
+             sleep 400
+             Send, {%AttackKey%}
+             sleep 300
+             Send, {%AttackKey%}
+             sleep 700
+             Send, {%AttackKey%}
+             sleep 600
+             Send, {%Skill3Key%}
+             sleep 1400
+             Send, {%Skill2Key%}{%Skill1Key%}
+             }
+        else
+        {
+             Break
+            }
+        }
+        sleep 10
+        Send, {%AttackKey%}
+        loop{
+        If (GetColor(564, 558)=="0xFFFFFF")
+        {
+            sleep 150
+            Send, {%Skill2Key%}
+            }
+        else
+        {
+            Break
+            }
+        }
+        sleep 10
+        Send, {%AttackKey%}
+        loop{
+        If (GetColor(494, 574)=="0xFFFFFF")
+        {
+            sleep 150
+            Send, {%Skill1Key%}
+            }
+        else
+        {
+            Break
+            }
+        }
+        Send, {%UltimateKey%}
+        sleep 10
+        Send, {%AttackKey%}
+        sleep 10
+        Send, {%Teammate1Key%}
+        sleep 10
+        Send, {%Teammate2Key%}
+        sleep 10
+    }
+    else
+    {
+        SetTimer, Press5, Off
+        ToolTip
+    }
+return
 ;------------------------------------------------强制停止脚本，小键盘0↓↓↓
 Stopscript:
     Reload
 return
-
-
