@@ -19,4 +19,4 @@
 
 所有脚本中途想停止按小键盘0。
 
-视频延时：https://www.bilibili.com/video/BV1BM4m1D7M5/
+视频演示：https://www.bilibili.com/video/BV1BM4m1D7M5/
