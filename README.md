@@ -6,8 +6,6 @@
 
 视频教程：https://www.bilibili.com/video/BV1BM4m1D7M5
 
-源码：https://github.com/qstdnx/AetherGazer-ahk
-
 使用方法：
 
 下载autohotkey: https://www.autohotkey.com
