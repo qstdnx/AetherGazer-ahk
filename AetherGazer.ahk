@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------------------------
 ; Script Name: 深空之眼
-; Version: 2.2
+; Version: 2.3
 ; Author: qstdnx
 ; Contact: https://github.com/qstdnx/AetherGazer-ahk/issues
 ; ----------------------------------------------------------------------------
@@ -24,6 +24,7 @@ global DimensionKey := "Numpad2"
 global ExploreKey := "Numpad3"
 global TuoteKey := "Numpad4"
 global NameiKey := "Numpad5"
+global WeierKey := "Numpad6"
 global StopscriptKey := "Numpad0"
 global ScriptDir := A_ScriptDir
 IniFilePath := ScriptDir . "\settings.ini"
@@ -42,6 +43,7 @@ IniFilePath := ScriptDir . "\settings.ini"
         IniRead, ExploreKey, %IniFilePath%, Hotkeys, ExploreKey
         IniRead, TuoteKey, %IniFilePath%, Hotkeys, TuoteKey
         IniRead, NameiKey, %IniFilePath%, Hotkeys, NameiKey
+        IniRead, WeierKey, %IniFilePath%, Hotkeys, WeierKey
         IniRead, StopscriptKey, %IniFilePath%, Hotkeys, StopscriptKey
     }
     
@@ -50,6 +52,7 @@ Hotkey, %DimensionKey%, Dimension
 Hotkey, %ExploreKey%, Explore
 Hotkey, %TuoteKey%, Tuote
 Hotkey, %NameiKey%, Namei
+Hotkey, %WeierKey%, Weier
 Hotkey, %StopscriptKey%, Stopscript
 
 
@@ -82,6 +85,8 @@ ShowSettingsGUI() {
     Gui, Add, Hotkey, vTuoteKey, % TuoteKey
     Gui, Add, Text,, 娜美自动战斗快捷键:
     Gui, Add, Hotkey, vNameiKey, % NameiKey
+    Gui, Add, Text,, 光薇儿自动战斗快捷键:
+    Gui, Add, Hotkey, vWeierKey, % WeierKey
     Gui, Add, Text,, 停止脚本快捷键:
     Gui, Add, Hotkey, vStopscriptKey, % StopscriptKey
     Gui, Add, Button, default, OK
@@ -110,6 +115,7 @@ ShowSettingsGUI() {
     IniWrite, %ExploreKey%, %IniFilePath%, Hotkeys, ExploreKey
     IniWrite, %TuoteKey%, %IniFilePath%, Hotkeys, TuoteKey
     IniWrite, %NameiKey%, %IniFilePath%, Hotkeys, NameiKey
+    IniWrite, %WeierKey%, %IniFilePath%, Hotkeys, WeierKey
     IniWrite, %StopscriptKey%, %IniFilePath%, Hotkeys, StopscriptKey
     ; 更新全局变量
     AttackKey := AttackKey
@@ -125,6 +131,7 @@ ShowSettingsGUI() {
     ExploreKey := ExploreKey
     TuoteKey := TuoteKey
     NameiKey := NameiKey
+    WeierKey := WeierKey
     StopscriptKey := StopscriptKey
     Hotkey, %JinwuKey%, Jinwu
     Hotkey, %DimensionKey%, Dimension
@@ -132,6 +139,7 @@ ShowSettingsGUI() {
     Hotkey, %TuoteKey%, Stopscript
     Hotkey, %TuoteKey%, Tuote
     Hotkey, %NameiKey%, Namei
+    Hotkey, %WeierKey%, Weier
     Hotkey, %StopscriptKey%, Stopscript
     
 
@@ -177,7 +185,7 @@ Press1:
     If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
     {
         loop{
-        If (GetColor(567, 564)=="0xFFFFFF" or GetColor(566, 561)=="0xFFFFFF" or)
+        If (GetColor(1162, 693)=="0xFFFFFF")
         {
             Send, {%Skill3Key%}
             sleep 10
@@ -213,6 +221,7 @@ Press1:
     {
         SetTimer, Press1, Off
         ToolTip
+        1_Enable= False 
     }
 return
 
@@ -291,12 +300,23 @@ Click, 600, -169 Left, Up
         Click, 1060, 662
         Sleep, 1000        
         ;选择真红
-        CoordMode, Pixel, Window
-        PicFilePath := ScriptDir . "\1.bmp"
-        ImageSearch, FoundX, FoundY, 47, 165, 427, 671, *140 %PicFilePath%
-        If ErrorLevel = 0
-            Click, %FoundX%, %FoundY% Left, 1
+        Click, 71, 707
         Sleep, 500
+        Click, 112, 165
+        Sleep, 500
+        Click, 133, 316
+        Sleep, 500
+        Click, 123, 587
+        Sleep, 500
+        Click, 235, 702
+        Sleep, 500
+        ;当前版本筛选后不用手动选择
+        ;CoordMode, Pixel, Window
+        ;PicFilePath := ScriptDir . "\1.bmp"
+        ;ImageSearch, FoundX, FoundY, 47, 165, 427, 671, *140 %PicFilePath%
+        ;If ErrorLevel = 0
+        ;    Click, %FoundX%, %FoundY% Left, 1
+        ;Sleep, 500
         Click, 1173, 701
         Sleep, 1000
         ;选择信标
@@ -402,6 +422,7 @@ Click, 618, -110 Left, Up
     {
         SetTimer, Press2, Off
         ToolTip
+		2_Enable=False
     }
 }
 return
@@ -582,6 +603,7 @@ Press4:
     {
         SetTimer, Press4, Off
         ToolTip
+        4_Enable= False
     }
 return
 ;------------------------------------------------娜美自动战斗,小键盘5启动 ↓↓↓
@@ -610,8 +632,7 @@ Namei:
 Press5:
     If WinActive("ahk_exe AetherGazer.exe")
     {
-        loop{
-        If (GetColor(655, 569)=="0xFFFFFF")
+        If (GetColor(1174, 684)=="0xFFFFFF")
         {
              send, {%DodgeKey%}
              sleep 400
@@ -624,38 +645,21 @@ Press5:
              Send, {%Skill3Key%}
              sleep 1400
              Send, {%Skill2Key%}{%Skill1Key%}
-             }
-        else
-        {
-             Break
-            }
-        }
+             }  
         sleep 10
         Send, {%AttackKey%}
-        loop{
-        If (GetColor(564, 558)=="0xFFFFFF")
+        If (GetColor(1090, 672)=="0xFFFFFF")
         {
             sleep 150
             Send, {%Skill2Key%}
             }
-        else
-        {
-            Break
-            }
-        }
         sleep 10
         Send, {%AttackKey%}
-        loop{
-        If (GetColor(494, 574)=="0xFFFFFF")
+        If (GetColor(1016, 697)=="0xFFFFFF")
         {
             sleep 150
             Send, {%Skill1Key%}
             }
-        else
-        {
-            Break
-            }
-        }
         Send, {%UltimateKey%}
         sleep 10
         Send, {%AttackKey%}
@@ -669,9 +673,68 @@ Press5:
     {
         SetTimer, Press5, Off
         ToolTip
+        5_Enable= False 
+    }
+return
+;------------------------------------------------光薇儿自动战斗,小键盘6启动 ↓↓↓
+6_Enable= False 
+#If WinActive("ahk_exe AetherGazer.exe") || WinActive("ahk_exe AetherGazer_Bili.exe")
+Weier: 
+{
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        6_Enable :=!6_Enable
+        if (6_Enable=False)
+        {
+            SetTimer, Press6, Off
+            ToolTip
+        }
+        else
+        {
+            sleep 100
+            SetTimer, Press6, 10  ; 
+            ToolTip, 光薇儿：启动, 74, 1021
+        }
+    }
+}
+
+Press6:
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        Send, {%Skill3Key%}
+        sleep 5
+        Send, {%AttackKey%}
+        sleep 5
+        Send, {%Skill1Key%}
+        sleep 5
+        Send, {%UltimateKey%}
+        sleep 5
+        Send, {%AttackKey%}
+        sleep 5
+        Send, {%Skill2Key%}
+        sleep 5
+        Send, {%Teammate1Key%}
+        sleep 5
+        Send, {%Skill1Key%}
+        sleep 5
+        Send, {%Teammate2Key%}
+        sleep 5
+        Send, {%Skill2Key%}
+        sleep 5
+    }
+    else
+    {
+        SetTimer, Press4, Off
+        ToolTip
+        6_Enable= False
     }
 return
 ;------------------------------------------------强制停止脚本，小键盘0↓↓↓
 Stopscript:
     Reload
+    1_Enable= False
+    2_Enable= False
+    4_Enable= False
+    5_Enable= False
+    6_Enable= False
 return
