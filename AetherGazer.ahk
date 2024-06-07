@@ -25,6 +25,7 @@ global ExploreKey := "Numpad3"
 global TuoteKey := "Numpad4"
 global NameiKey := "Numpad5"
 global WeierKey := "Numpad6"
+global KaorouKey := "Numpad7"
 global StopscriptKey := "Numpad0"
 global ScriptDir := A_ScriptDir
 IniFilePath := ScriptDir . "\settings.ini"
@@ -44,6 +45,7 @@ IniFilePath := ScriptDir . "\settings.ini"
         IniRead, TuoteKey, %IniFilePath%, Hotkeys, TuoteKey
         IniRead, NameiKey, %IniFilePath%, Hotkeys, NameiKey
         IniRead, WeierKey, %IniFilePath%, Hotkeys, WeierKey
+        IniRead, KaorouKey, %IniFilePath%, Hotkeys, KaorouKey
         IniRead, StopscriptKey, %IniFilePath%, Hotkeys, StopscriptKey
     }
     
@@ -53,6 +55,7 @@ Hotkey, %ExploreKey%, Explore
 Hotkey, %TuoteKey%, Tuote
 Hotkey, %NameiKey%, Namei
 Hotkey, %WeierKey%, Weier
+Hotkey, %KaorouKey%, Kaorou
 Hotkey, %StopscriptKey%, Stopscript
 
 
@@ -87,6 +90,8 @@ ShowSettingsGUI() {
     Gui, Add, Hotkey, vNameiKey, % NameiKey
     Gui, Add, Text,, 光薇儿自动战斗快捷键:
     Gui, Add, Hotkey, vWeierKey, % WeierKey
+    Gui, Add, Text,, 自动烤肉快捷键:
+    Gui, Add, Hotkey, vKaorouKey, % KaorouKey
     Gui, Add, Text,, 停止脚本快捷键:
     Gui, Add, Hotkey, vStopscriptKey, % StopscriptKey
     Gui, Add, Button, default, OK
@@ -116,6 +121,7 @@ ShowSettingsGUI() {
     IniWrite, %TuoteKey%, %IniFilePath%, Hotkeys, TuoteKey
     IniWrite, %NameiKey%, %IniFilePath%, Hotkeys, NameiKey
     IniWrite, %WeierKey%, %IniFilePath%, Hotkeys, WeierKey
+    IniWrite, %KaorouKey%, %IniFilePath%, Hotkeys, KaorouKey
     IniWrite, %StopscriptKey%, %IniFilePath%, Hotkeys, StopscriptKey
     ; 更新全局变量
     AttackKey := AttackKey
@@ -132,6 +138,7 @@ ShowSettingsGUI() {
     TuoteKey := TuoteKey
     NameiKey := NameiKey
     WeierKey := WeierKey
+    KaorouKey := KaorouKey
     StopscriptKey := StopscriptKey
     Hotkey, %JinwuKey%, Jinwu
     Hotkey, %DimensionKey%, Dimension
@@ -140,6 +147,7 @@ ShowSettingsGUI() {
     Hotkey, %TuoteKey%, Tuote
     Hotkey, %NameiKey%, Namei
     Hotkey, %WeierKey%, Weier
+    Hotkey, %KaorouKey%, Kaorou
     Hotkey, %StopscriptKey%, Stopscript
     
 
@@ -305,18 +313,18 @@ Click, 600, -169 Left, Up
         Click, 112, 165
         Sleep, 500
         Click, 133, 316
-        Sleep, 500
-        Click, 123, 587
+        ;选物理系有些人会选不到
+        ;Sleep, 500
+        ;Click, 123, 587
         Sleep, 500
         Click, 235, 702
         Sleep, 500
-        ;当前版本筛选后不用手动选择
-        ;CoordMode, Pixel, Window
-        ;PicFilePath := ScriptDir . "\1.bmp"
-        ;ImageSearch, FoundX, FoundY, 47, 165, 427, 671, *140 %PicFilePath%
-        ;If ErrorLevel = 0
-        ;    Click, %FoundX%, %FoundY% Left, 1
-        ;Sleep, 500
+        CoordMode, Pixel, Window
+        PicFilePath := ScriptDir . "\1.bmp"
+        ImageSearch, FoundX, FoundY, 47, 165, 427, 671, *140 %PicFilePath%
+        If ErrorLevel = 0
+            Click, %FoundX%, %FoundY% Left, 1
+        Sleep, 500
         Click, 1173, 701
         Sleep, 1000
         ;选择信标
@@ -729,6 +737,68 @@ Press6:
         6_Enable= False
     }
 return
+;------------------------------------------------闲暇时刻自动烤肉，小键盘7启动↓↓↓
+Kaorou: 
+{
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        7_Enable := !7_Enable
+        if (7_Enable = False)
+        {
+            SetTimer, Press7, Off
+            ToolTip
+        }
+        else
+        {
+            Sleep 100
+            SetTimer, Press7, 10
+            ToolTip, 烤肉：启动, 74, 1021
+        }
+    }
+}
+
+Press7:
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        color := GetColor(691, 180)
+        if (IsColorClose(color, "0xde6566", 10))  ; 容差设为10
+        {
+            Send, i
+        }
+        else if (IsColorClose(color, "0x4abbf1", 10))  ; 容差设为10
+        {
+            Send, u
+        }
+    }
+    else
+    {
+        SetTimer, Press7, Off
+        ToolTip
+        7_Enable = False
+    }
+return
+
+; 判断两个颜色值是否在容差范围内
+IsColorClose(color1, color2, tolerance)
+{
+    color1 := "0x" SubStr(color1, 3)
+    color2 := "0x" SubStr(color2, 3)
+    
+    r1 := (color1 >> 16) & 0xFF
+    g1 := (color1 >> 8) & 0xFF
+    b1 := color1 & 0xFF
+    
+    r2 := (color2 >> 16) & 0xFF
+    g2 := (color2 >> 8) & 0xFF
+    b2 := color2 & 0xFF
+    
+    if (Abs(r1 - r2) <= tolerance && Abs(g1 - g2) <= tolerance && Abs(b1 - b2) <= tolerance)
+    {
+        return true
+    }
+    return false
+}
+
 ;------------------------------------------------强制停止脚本，小键盘0↓↓↓
 Stopscript:
     Reload
@@ -737,4 +807,5 @@ Stopscript:
     4_Enable= False
     5_Enable= False
     6_Enable= False
+    7_Enable= False
 return
