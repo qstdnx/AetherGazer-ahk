@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------------------------
 ; Script Name: 深空之眼
-; Version: 2.3
+; Version: 2.4
 ; Author: qstdnx
 ; Contact: https://github.com/qstdnx/AetherGazer-ahk/issues
 ; ----------------------------------------------------------------------------
@@ -62,43 +62,44 @@ Hotkey, %StopscriptKey%, Stopscript
 Menu, Tray, Add, 快捷键设置, ShowSettingsGUI
 ShowSettingsGUI() {
     Gui, New
+;Gui, Add, Text,, 模式
+    ;Gui, Add, DropDownList, vColorChoice, Black|White|Red|Green|Blue
     Gui, Add, Text,, 普攻快捷键:
-    Gui, Add, Hotkey, vAttackKey, % AttackKey
+    Gui, Add, Hotkey, vAttackKey, %AttackKey%
     Gui, Add, Text,, 1 技能快捷键:
-    Gui, Add, Hotkey, vSkill1Key, % Skill1Key
+    Gui, Add, Hotkey, vSkill1Key, %Skill1Key%
     Gui, Add, Text,, 2 技能快捷键:
-    Gui, Add, Hotkey, vSkill2Key, % Skill2Key
+    Gui, Add, Hotkey, vSkill2Key, %Skill2Key%
     Gui, Add, Text,, 3 技能快捷键:
-    Gui, Add, Hotkey, vSkill3Key, % Skill3Key
+    Gui, Add, Hotkey, vSkill3Key, %Skill3Key%
     Gui, Add, Text,, 闪避快捷键:
-    Gui, Add, Hotkey, vDodgeKey, % DodgeKey
+    Gui, Add, Hotkey, vDodgeKey, %DodgeKey%
     Gui, Add, Text,, 奥义快捷键:
-    Gui, Add, Hotkey, vUltimateKey, % UltimateKey
+    Gui, Add, Hotkey, vUltimateKey, %UltimateKey%
     Gui, Add, Text,, 队友1 奥义快捷键:
-    Gui, Add, Hotkey, vTeammate1Key, % Teammate1Key
+    Gui, Add, Hotkey, vTeammate1Key, %Teammate1Key%
     Gui, Add, Text,, 队友2 奥义快捷键:
-    Gui, Add, Hotkey, vTeammate2Key, % Teammate2Key
+    Gui, Add, Hotkey, vTeammate2Key, %Teammate2Key%
     Gui, Add, Text,, 金乌自动战斗快捷键:
-    Gui, Add, Hotkey, vJinwuKey, % JinwuKey
+    Gui, Add, Hotkey, vJinwuKey, %JinwuKey%
     Gui, Add, Text,, 自动多维变量快捷键:
-    Gui, Add, Hotkey, vDimensionKey, % DimensionKey
+    Gui, Add, Hotkey, vDimensionKey, %DimensionKey%
     Gui, Add, Text,, 自动探索快捷键:
-    Gui, Add, Hotkey, vExploreKey, % ExploreKey
-    Gui, Add, Text,, 托特自动战斗快捷键:
-    Gui, Add, Hotkey, vTuoteKey, % TuoteKey
+    Gui, Add, Hotkey, vExploreKey, %ExploreKey%
+    Gui, Add, Text,, 托特和哈迪斯自动战斗快捷键:
+    Gui, Add, Hotkey, vTuoteKey, %TuoteKey%
     Gui, Add, Text,, 娜美自动战斗快捷键:
-    Gui, Add, Hotkey, vNameiKey, % NameiKey
+    Gui, Add, Hotkey, vNameiKey, %NameiKey%
     Gui, Add, Text,, 光薇儿自动战斗快捷键:
-    Gui, Add, Hotkey, vWeierKey, % WeierKey
+    Gui, Add, Hotkey, vWeierKey, %WeierKey%
     Gui, Add, Text,, 自动烤肉快捷键:
-    Gui, Add, Hotkey, vKaorouKey, % KaorouKey
+    Gui, Add, Hotkey, vKaorouKey, %KaorouKey%
     Gui, Add, Text,, 停止脚本快捷键:
-    Gui, Add, Hotkey, vStopscriptKey, % StopscriptKey
+    Gui, Add, Hotkey, vStopscriptKey, %StopscriptKey%
     Gui, Add, Button, default, OK
     Gui, Show, , 设置快捷键
-    }
     return
-
+}
     GuiClose:
     GuiEscape:
     Gui, Destroy
@@ -414,6 +415,8 @@ Click, 618, -110 Left, Up
         Click, 745, 643
         Sleep, 2000
         ;退出
+        Send, {Alt}
+        Sleep, 500
         Click, 1229, 74
         Sleep, 500
         Click, 1000, 692
@@ -424,6 +427,7 @@ Click, 618, -110 Left, Up
             break
             }
         Click, 1170, 700
+        Sleep, 2000
         }
         } 
     else
@@ -555,7 +559,7 @@ Explore:
         Sleep, 78
         Click, 870, 681 Left, Up
 }
-;------------------------------------------------托特自动战斗,小键盘4启动 ↓↓↓
+;------------------------------------------------托特或哈迪斯自动战斗,小键盘4启动 ↓↓↓
 
 4_Enable= False 
 #If WinActive("ahk_exe AetherGazer.exe") || WinActive("ahk_exe AetherGazer_Bili.exe")
@@ -573,7 +577,7 @@ Tuote:
         {
             sleep 100
             SetTimer, Press4, 10  ; 
-            ToolTip, 托特：启动, 74, 1021
+            ToolTip, 托特或哈迪斯：启动, 74, 1021
         }
     }
 }
