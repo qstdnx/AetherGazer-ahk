@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------------------------
 ; Script Name: 深空之眼
-; Version: 2.4
+; Version: 2.5
 ; Author: qstdnx
 ; Contact: https://github.com/qstdnx/AetherGazer-ahk/issues
 ; ----------------------------------------------------------------------------
@@ -21,11 +21,12 @@ global Teammate1Key := "1"
 global Teammate2Key := "2"
 global JinwuKey := "Numpad1"
 global DimensionKey := "Numpad2"
-global ExploreKey := "Numpad3"
+global LingguangKey := "Numpad3"
 global TuoteKey := "Numpad4"
 global NameiKey := "Numpad5"
 global WeierKey := "Numpad6"
 global KaorouKey := "Numpad7"
+global LiandianKey := "Numpad9"
 global StopscriptKey := "Numpad0"
 global ScriptDir := A_ScriptDir
 IniFilePath := ScriptDir . "\settings.ini"
@@ -41,21 +42,23 @@ IniFilePath := ScriptDir . "\settings.ini"
         IniRead, Teammate2Key, %IniFilePath%, Hotkeys, Teammate2Key
         IniRead, JinwuKey, %IniFilePath%, Hotkeys, JinwuKey
         IniRead, DimensionKey, %IniFilePath%, Hotkeys, DimensionKey
-        IniRead, ExploreKey, %IniFilePath%, Hotkeys, ExploreKey
+        IniRead, LingguangKey, %IniFilePath%, Hotkeys, LingguangKey
         IniRead, TuoteKey, %IniFilePath%, Hotkeys, TuoteKey
         IniRead, NameiKey, %IniFilePath%, Hotkeys, NameiKey
         IniRead, WeierKey, %IniFilePath%, Hotkeys, WeierKey
         IniRead, KaorouKey, %IniFilePath%, Hotkeys, KaorouKey
+        IniRead, LiandianKey, %IniFilePath%, Hotkeys, LiandianKey
         IniRead, StopscriptKey, %IniFilePath%, Hotkeys, StopscriptKey
     }
     
 Hotkey, %JinwuKey%, Jinwu
 Hotkey, %DimensionKey%, Dimension
-Hotkey, %ExploreKey%, Explore
+Hotkey, %LingguangKey%, Lingguang
 Hotkey, %TuoteKey%, Tuote
 Hotkey, %NameiKey%, Namei
 Hotkey, %WeierKey%, Weier
 Hotkey, %KaorouKey%, Kaorou
+Hotkey, %LiandianKey%, Liandian
 Hotkey, %StopscriptKey%, Stopscript
 
 
@@ -85,7 +88,7 @@ ShowSettingsGUI() {
     Gui, Add, Text,, 自动多维变量快捷键:
     Gui, Add, Hotkey, vDimensionKey, %DimensionKey%
     Gui, Add, Text,, 自动探索快捷键:
-    Gui, Add, Hotkey, vExploreKey, %ExploreKey%
+    Gui, Add, Hotkey, vLingguangKey, %LingguangKey%
     Gui, Add, Text,, 托特和哈迪斯自动战斗快捷键:
     Gui, Add, Hotkey, vTuoteKey, %TuoteKey%
     Gui, Add, Text,, 娜美自动战斗快捷键:
@@ -94,6 +97,8 @@ ShowSettingsGUI() {
     Gui, Add, Hotkey, vWeierKey, %WeierKey%
     Gui, Add, Text,, 自动烤肉快捷键:
     Gui, Add, Hotkey, vKaorouKey, %KaorouKey%
+    Gui, Add, Text,, 简易连点器快捷键:
+    Gui, Add, Hotkey, vLiandianKey, %LiandianKey%
     Gui, Add, Text,, 停止脚本快捷键:
     Gui, Add, Hotkey, vStopscriptKey, %StopscriptKey%
     Gui, Add, Button, default, OK
@@ -118,11 +123,12 @@ ShowSettingsGUI() {
     IniWrite, %Teammate2Key%, %IniFilePath%, Hotkeys, Teammate2Key
     IniWrite, %JinwuKey%, %IniFilePath%, Hotkeys, JinwuKey
     IniWrite, %DimensionKey%, %IniFilePath%, Hotkeys, DimensionKey
-    IniWrite, %ExploreKey%, %IniFilePath%, Hotkeys, ExploreKey
+    IniWrite, %LingguangKey%, %IniFilePath%, Hotkeys, LingguangKey
     IniWrite, %TuoteKey%, %IniFilePath%, Hotkeys, TuoteKey
     IniWrite, %NameiKey%, %IniFilePath%, Hotkeys, NameiKey
     IniWrite, %WeierKey%, %IniFilePath%, Hotkeys, WeierKey
     IniWrite, %KaorouKey%, %IniFilePath%, Hotkeys, KaorouKey
+    IniWrite, %LiandianKey%, %IniFilePath%, Hotkeys, LiandianKey
     IniWrite, %StopscriptKey%, %IniFilePath%, Hotkeys, StopscriptKey
     ; 更新全局变量
     AttackKey := AttackKey
@@ -135,20 +141,22 @@ ShowSettingsGUI() {
     Teammate2Key := Teammate2Key
     JinwuKey := JinwuKey
     DimensionKey := DimensionKey
-    ExploreKey := ExploreKey
+    LingguangKey := LingguangKey
     TuoteKey := TuoteKey
     NameiKey := NameiKey
     WeierKey := WeierKey
     KaorouKey := KaorouKey
+    LiandianKey := LiandianKey
     StopscriptKey := StopscriptKey
     Hotkey, %JinwuKey%, Jinwu
     Hotkey, %DimensionKey%, Dimension
-    Hotkey, %ExploreKey%, Explore
+    Hotkey, %LingguangKey%, Lingguang
     Hotkey, %TuoteKey%, Stopscript
     Hotkey, %TuoteKey%, Tuote
     Hotkey, %NameiKey%, Namei
     Hotkey, %WeierKey%, Weier
     Hotkey, %KaorouKey%, Kaorou
+    Hotkey, %LiandianKey%, Liandian
     Hotkey, %StopscriptKey%, Stopscript
     
 
@@ -438,127 +446,59 @@ Click, 618, -110 Left, Up
     }
 }
 return
-------------------------------------------------自动探索派遣，小键盘3启动 ↓↓↓
+------------------------------------------------陵光自动操作，小键盘3启动 ↓↓↓
+3_Enable= False 
 #If WinActive("ahk_exe AetherGazer.exe") || WinActive("ahk_exe AetherGazer_Bili.exe")
-Explore:
+Lingguang: 
 {
-        Sleep, 333
-        Click, 859, 136 Left, Down
-        Sleep, 47
-        Click, 859, 136 Left, Up
-        Sleep, 2719
-        Click, 1055, 125 Left, Down
-        Sleep, 63
-        Click, 1055, 125 Left, Up
-        Sleep, 1187
-        Click, 1045, 134 Left, Down
-        Sleep, 109
-        Click, 1045, 134 Left, Up
-        Sleep, 1860
-        Click, 873, 381 Left, Down
-        Sleep, 94
-        Click, 873, 381 Left, Up
-        Sleep, 1531
-        Click, 1093, 151 Left, Down
-        Sleep, 94
-        Click, 1093, 151 Left, Up
-        Sleep, 375
-        Click, 1093, 151 Left, Down
-        Sleep, 109
-        Click, 1093, 151 Left, Up
-        Sleep, 1406
-        Click, 451, 418 Left, Down
-        Sleep, 78
-        Click, 451, 418 Left, Up
-        Sleep, 1250
-        Click, 1097, 149 Left, Down
-        Sleep, 78
-        Click, 1097, 149 Left, Up
-        Sleep, 297
-        Click, 1096, 149 Left, Down
-        Sleep, 125
-        Click, 1096, 149 Left, Up
-        Sleep, 1157
-        Click, 415, 165 Left, Down
-        Sleep, 78
-        Click, 415, 165 Left, Up
-        Sleep, 1062
-        Click, 1111, 138 Left, Down
-        Sleep, 94
-        Click, 1111, 138 Left, Up
-        Sleep, 203
-        Click, 1111, 138 Left, Down
-        Sleep, 94
-        Click, 1111, 138 Left, Up
-        Sleep, 1703
-        Click, 664, 291 Left, Down
-        Sleep, 94
-        Click, 660, 298 Left, Up
-        Sleep, 1047
-        Click, 1130, 131 Left, Down
-        Sleep, 93
-        Click, 1130, 131 Left, Up
-        Sleep, 157
-        Click, 1130, 131 Left, Down
-        Sleep, 78
-        Click, 1130, 131 Left, Up
-        Sleep, 1125
-        Click, 845, 143 Left, Down
-        Sleep, 93
-        Click, 845, 143 Left, Up
-        Sleep, 1563
-        Click, 829, 683 Left, Down
-        Sleep, 78
-        Click, 829, 683 Left, Up
-        Sleep, 1438
-        Click, 870, 375 Left, Down
-        Sleep, 109
-        Click, 870, 375 Left, Up
-        Sleep, 1187
-        Click, 940, 244 Left, Down
-        Sleep, 79
-        Click, 940, 244 Left, Up
-        Sleep, 1078
-        Click, 832, 672 Left, Down
-        Sleep, 78
-        Click, 832, 672 Left, Up
-        Sleep, 1547
-        Click, 438, 432 Left, Down
-        Sleep, 78
-        Click, 438, 432 Left, Up
-        Sleep, 1453
-        Click, 922, 235 Left, Down
-        Sleep, 94
-        Click, 922, 235 Left, Up
-        Sleep, 1000
-        Click, 827, 679 Left, Down
-        Sleep, 78
-        Click, 827, 679 Left, Up
-        Sleep, 1390
-        Click, 643, 280 Left, Down
-        Sleep, 79
-        Click, 643, 280 Left, Up
-        Sleep, 1453
-        Click, 821, 243 Left, Down
-        Sleep, 78
-        Click, 821, 243 Left, Up
-        Sleep, 1015
-        Click, 819, 679 Left, Down
-        Sleep, 79
-        Click, 819, 679 Left, Up
-        Sleep, 1281
-        Click, 413, 169 Left, Down
-        Sleep, 62
-        Click, 413, 169 Left, Up
-        Sleep, 1344
-        Click, 828, 238 Left, Down
-        Sleep, 78
-        Click, 828, 238 Left, Up
-        Sleep, 1063
-        Click, 870, 681 Left, Down
-        Sleep, 78
-        Click, 870, 681 Left, Up
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        3_Enable :=!3_Enable
+        if (3_Enable=False)
+        {
+            SetTimer, Press3, Off
+            ToolTip
+        }
+        else
+        {
+            sleep 100
+            SetTimer, Press3, 10  ; 
+            ToolTip, 陵光：启动, 74, 1021
+        }
+    }
 }
+
+Press3:
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        ;loop{
+        ; If (GetColor(1162, 693)=="0xFFFFFF")
+        ; {
+        ;     Send, {%Skill3Key%}
+        ;     sleep 10
+        ;     Send, {%Skill3Key%}
+        ;     }
+        ; else
+        ; {
+        ;     Break
+        ;     }
+        ; }
+        Send, {%AttackKey%}
+        sleep 500
+        Send, {%Skill1Key%}
+        sleep 500     
+        Send, {%UltimateKey%}
+        Send, {%Teammate1Key%}
+        Send, {%Teammate2Key%}
+    }
+    else
+    {
+        SetTimer, Press3, Off
+        ToolTip
+        1_Enable= False 
+    }
+return
+
 ;------------------------------------------------托特或哈迪斯自动战斗,小键盘4启动 ↓↓↓
 
 4_Enable= False 
@@ -742,6 +682,7 @@ Press6:
     }
 return
 ;------------------------------------------------闲暇时刻自动烤肉，小键盘7启动↓↓↓
+7_Enable= False 
 Kaorou: 
 {
     If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
@@ -769,7 +710,7 @@ Press7:
         {
             Send, i
         }
-        else if (IsColorClose(color, "0x4abbf1", 10))  ; 容差设为10
+        if (IsColorClose(color, "0x4abbf1", 10))  ; 容差设为10
         {
             Send, u
         }
@@ -802,14 +743,114 @@ IsColorClose(color1, color2, tolerance)
     }
     return false
 }
+;--------------------------简易连点器功能，右ctrl+任意键连点，小键盘9启动自定义连点↓↓↓
+9_Enable := false
+Inputkey := ""
+RControl::
+    Input, Inputkey, L1 I V, {MouseX, MouseY}
+    9_Enable := true
+    Loop {
+        If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe"){
+        if (9_Enable){
+            Send, %Inputkey%
+            Sleep, 50
+            Tooltip, %Inputkey% 键连点中，按%StopscriptKey%停止
+            }
+            if (!9_Enable or Inputkey=""){
+            Tooltip
+            break
+            }
+        } else {
+        9_Enable := false
+        Tooltip
+        break
+        }
+    }
+    return
+
+;可记忆版本，容易卡键
+; keyToClick := ""
+; RControl::
+;     Input, Inputkey, L1 I V, {MouseX, MouseY}
+;     keyToClick := keyToClick . Inputkey
+;     9_Enable := true
+;     Loop {
+;         If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe"){
+;         if (9_Enable){
+;             Send, %keyToClick%
+;             Sleep, 50
+;             Tooltip, %keyToClick% 键连点中，按%StopscriptKey%停止`n按右alt键暂停，再次点击右ctrl+任意键同时连点暂停前记录的按键
+;             }
+;             if (!9_Enable or keyToClick=""){
+;             Tooltip
+;             break
+;             }
+;         } else {
+;         9_Enable := false
+;         Tooltip
+;         break
+;         }
+;     }
+;     return
+
+;连点鼠标，导致rctrl失效
+; RControl & LButton::
+;     Loop {
+;     If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe"){
+;         if (9_Enable)
+;         Click
+;         Sleep, 50
+;         ToolTip,鼠标左键连点中，`n间隔50毫秒，按%StopscriptKey%停止
+;         } else {
+;         9_Enable := false
+;         ToolTip
+;         break
+;         }
+;     }
+;     return
+
+; RAlt::
+;     9_Enable := false
+;     return
+
+Liandian:
+{
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    Gosub, 连点弹框输入
+    Return
+}
+连点弹框输入:
+    Gui, MouseClickgui: New
+    Gui, MouseClickgui: +AlwaysOnTop
+    Gui, MouseClickgui: Add, Text, , 填写连点的按键：`n同时连按多个按键直接填入即可，例如填入jkio为同时连点jkio四个按键`n特殊按键用{}圈住，例如鼠标左键为{LButton}，空格键为{Space}，左shift为{LShift}
+    Gui, MouseClickgui: Add, Edit, w400 v连点按键, {LButton}
+    Gui, MouseClickgui: Add, Text, , 连点间隔（单位毫秒）：
+    Gui, MouseClickgui: Add, Edit, w400 v连点间隔, 50
+    Gui, MouseClickgui: Add, Button, Default g连点确认, 确认
+    Gui, MouseClickgui: Show, , 按键连点
+Return
+连点确认:
+    Gui, MouseClickgui: Submit
+    global WhichButton:= 连点按键
+    global interval:= 连点间隔
+    SetTimer, ContinuousClick, %连点间隔%
+    return
+    
+ContinuousClick:
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    send, %WhichButton%
+    ToolTip,%WhichButton%键连点中，`n间隔%interval%毫秒，按%StopscriptKey%停止
+    return
 
 ;------------------------------------------------强制停止脚本，小键盘0↓↓↓
 Stopscript:
     Reload
     1_Enable= False
     2_Enable= False
+    3_Enable= False
     4_Enable= False
     5_Enable= False
     6_Enable= False
     7_Enable= False
+    9_Enable= False
 return
