@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------------------------
 ; Script Name: 深空之眼
-; Version: 2.5
+; Version: 2.6
 ; Author: qstdnx
 ; Contact: https://github.com/qstdnx/AetherGazer-ahk/issues
 ; ----------------------------------------------------------------------------
@@ -27,6 +27,7 @@ global NameiKey := "Numpad5"
 global WeierKey := "Numpad6"
 global KaorouKey := "Numpad7"
 global LiandianKey := "Numpad9"
+global FantianKey := "^Numpad1"
 global StopscriptKey := "Numpad0"
 global ScriptDir := A_ScriptDir
 IniFilePath := ScriptDir . "\settings.ini"
@@ -48,6 +49,7 @@ IniFilePath := ScriptDir . "\settings.ini"
         IniRead, WeierKey, %IniFilePath%, Hotkeys, WeierKey
         IniRead, KaorouKey, %IniFilePath%, Hotkeys, KaorouKey
         IniRead, LiandianKey, %IniFilePath%, Hotkeys, LiandianKey
+        IniRead, FantianKey, %IniFilePath%, Hotkeys, FantianKey
         IniRead, StopscriptKey, %IniFilePath%, Hotkeys, StopscriptKey
     }
     
@@ -59,6 +61,7 @@ Hotkey, %NameiKey%, Namei
 Hotkey, %WeierKey%, Weier
 Hotkey, %KaorouKey%, Kaorou
 Hotkey, %LiandianKey%, Liandian
+Hotkey, %FantianKey%, Fantian
 Hotkey, %StopscriptKey%, Stopscript
 
 
@@ -87,7 +90,7 @@ ShowSettingsGUI() {
     Gui, Add, Hotkey, vJinwuKey, %JinwuKey%
     Gui, Add, Text,, 自动多维变量快捷键:
     Gui, Add, Hotkey, vDimensionKey, %DimensionKey%
-    Gui, Add, Text,, 自动探索快捷键:
+    Gui, Add, Text,, 陵光自动战斗快捷键:
     Gui, Add, Hotkey, vLingguangKey, %LingguangKey%
     Gui, Add, Text,, 托特和哈迪斯自动战斗快捷键:
     Gui, Add, Hotkey, vTuoteKey, %TuoteKey%
@@ -99,6 +102,8 @@ ShowSettingsGUI() {
     Gui, Add, Hotkey, vKaorouKey, %KaorouKey%
     Gui, Add, Text,, 简易连点器快捷键:
     Gui, Add, Hotkey, vLiandianKey, %LiandianKey%
+    Gui, Add, Text,, 梵天自动战斗快捷键:
+    Gui, Add, Hotkey, vFantianKey, %FantianKey%
     Gui, Add, Text,, 停止脚本快捷键:
     Gui, Add, Hotkey, vStopscriptKey, %StopscriptKey%
     Gui, Add, Button, default, OK
@@ -129,6 +134,7 @@ ShowSettingsGUI() {
     IniWrite, %WeierKey%, %IniFilePath%, Hotkeys, WeierKey
     IniWrite, %KaorouKey%, %IniFilePath%, Hotkeys, KaorouKey
     IniWrite, %LiandianKey%, %IniFilePath%, Hotkeys, LiandianKey
+    IniWrite, %FantianKey%, %IniFilePath%, Hotkeys, FantianKey
     IniWrite, %StopscriptKey%, %IniFilePath%, Hotkeys, StopscriptKey
     ; 更新全局变量
     AttackKey := AttackKey
@@ -147,6 +153,7 @@ ShowSettingsGUI() {
     WeierKey := WeierKey
     KaorouKey := KaorouKey
     LiandianKey := LiandianKey
+    FantianKey := FantianKey
     StopscriptKey := StopscriptKey
     Hotkey, %JinwuKey%, Jinwu
     Hotkey, %DimensionKey%, Dimension
@@ -157,6 +164,7 @@ ShowSettingsGUI() {
     Hotkey, %WeierKey%, Weier
     Hotkey, %KaorouKey%, Kaorou
     Hotkey, %LiandianKey%, Liandian
+    Hotkey, %FantianKey%, FantianKey
     Hotkey, %StopscriptKey%, Stopscript
     
 
@@ -471,22 +479,10 @@ Lingguang:
 Press3:
     If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
     {
-        ;loop{
-        ; If (GetColor(1162, 693)=="0xFFFFFF")
-        ; {
-        ;     Send, {%Skill3Key%}
-        ;     sleep 10
-        ;     Send, {%Skill3Key%}
-        ;     }
-        ; else
-        ; {
-        ;     Break
-        ;     }
-        ; }
         Send, {%AttackKey%}
-        sleep 500
+        sleep 250
         Send, {%Skill1Key%}
-        sleep 500     
+        sleep 250     
         Send, {%UltimateKey%}
         Send, {%Teammate1Key%}
         Send, {%Teammate2Key%}
@@ -566,7 +562,7 @@ Namei:
     If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
     {
         5_Enable :=!5_Enable
-        if (5_Enable=true)
+        if (5_Enable=False)
         {
             SetTimer, Press5, Off
             ToolTip
@@ -676,7 +672,7 @@ Press6:
     }
     else
     {
-        SetTimer, Press4, Off
+        SetTimer, Press6, Off
         ToolTip
         6_Enable= False
     }
@@ -842,6 +838,65 @@ ContinuousClick:
     ToolTip,%WhichButton%键连点中，`n间隔%interval%毫秒，按%StopscriptKey%停止
     return
 
+;------------------------------------------------梵天自动战斗,Ctrl+小键盘1启动 ↓↓↓
+11_Enable= False 
+#If WinActive("ahk_exe AetherGazer.exe") || WinActive("ahk_exe AetherGazer_Bili.exe")
+Fantian: 
+{
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        11_Enable :=!11_Enable
+        if (11_Enable=False)
+        {
+            SetTimer, Press11, Off
+            ToolTip
+        }
+        else
+        {
+            sleep 100
+            SetTimer, Press11, 10  ; 
+            ToolTip, 梵天：启动, 74, 1021
+        }
+    }
+}
+
+Press11:
+    If WinActive("ahk_exe AetherGazer.exe") or WinActive("ahk_exe AetherGazer_Bili.exe")
+    {
+        If (GetColor(898, 681)!=="0xFFFFFF" and GetColor(1218, 681)=="0xFFFFFF")
+        {
+            Send, {%DodgeKey% Down}
+            Sleep, 500
+            Send, {%DodgeKey% Up}
+            }
+        Send, {%Skill3Key%}
+        sleep 5
+        Send, {%AttackKey%}
+        sleep 5
+        Send, {%Skill1Key%}
+        sleep 5
+        Send, {%UltimateKey%}
+        sleep 5
+        Send, {%AttackKey%}
+        sleep 5
+        Send, {%Skill2Key%}
+        sleep 5
+        Send, {%Teammate2Key%}
+        sleep 5
+        Send, {%Skill1Key%}
+        sleep 5
+        Send, {%AttackKey%}
+        sleep 5
+        Send, {%Skill2Key%}
+        sleep 5
+    }
+    else
+    {
+        SetTimer, Press11, Off
+        ToolTip
+        11_Enable= False
+    }
+return
 ;------------------------------------------------强制停止脚本，小键盘0↓↓↓
 Stopscript:
     Reload
@@ -853,4 +908,5 @@ Stopscript:
     6_Enable= False
     7_Enable= False
     9_Enable= False
+    11_Enable= False
 return
